@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define M 1
+
 typedef struct grep {
   int n;
   int e;
@@ -31,11 +33,13 @@ void ifc(int i, int c, char* str, char** v, s21_grep t);
 void ifce(int j, int c, char* str, char** v, s21_grep t);
 void ife(int j, int c, char* str, char** v, s21_grep t);
 void ifo(int fnc, int ct, char* s, char* str, char* v, s21_grep t);
-void FlagF(char* s, char* str, s21_grep t);
-void FR(int* status, int c, int cflags, char* pa, char* s, char** v,
-        regex_t* reg);
+int FlagF(char* s, char* str, s21_grep t);
+int FlagFe(int c, int cflags, char* s, char** v,
+        regex_t* reg, regmatch_t* chr);
+void FR(int* status, int c, int cflags, char* s, char** v,
+        regex_t* reg, regmatch_t* chr);
 int fnct(int j, int c, char** v);
-
 char* lower(char* a);
+char* ft_substr(const char* str, unsigned start, unsigned end);
 
 #endif  // S21_GREP_H_
