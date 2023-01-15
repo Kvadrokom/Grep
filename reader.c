@@ -48,11 +48,11 @@ void ifl(int i, int c, char* str, char** v, s21_grep t) {
       }
     }
   } else {
-    ifle(i, c, str, v, t);
+    ifle(i, c, v, t);
   }
 }
 
-void ifle(int j, int c, char* str, char** v, s21_grep t) {
+void ifle(int j, int c, char** v, s21_grep t) {
   FILE* f;
   int ct, status, maxstr, cflags;
   if (t.i == 1) {
@@ -63,14 +63,14 @@ void ifle(int j, int c, char* str, char** v, s21_grep t) {
 
   for (int i = 1; i < c; i++) {
     while (1) {
-      if (strstr(v[i], "-e") != NULL) {
+      if (strstr(v[i], "-e") != NULL || strstr(v[i], "-f") != NULL) {
         if (strlen(v[i]) == 2) {
           if (c - i < 3)
-            break;
+            return;
           else
             i += 2;
         } else {
-          break;
+          return;
         }
       } else {
         break;
@@ -85,11 +85,7 @@ void ifle(int j, int c, char* str, char** v, s21_grep t) {
         maxstr = max(v[i]) + 2;
         char* s = (char*)malloc(sizeof(char) * maxstr);
         while (fgets(s, maxstr, f)) {
-          FR(&status, c, cflags, s, v, &reg, chr);
-          if (t.f == 1) {
-            if (FlagF(s, str, t) == 1)
-              status = 1;
-          }
+          FR(&status, c, cflags, s, v, &reg, chr, t);
           if (t.v != 1) {
             if (status == 0) ct = 1;
           } else {
@@ -226,7 +222,7 @@ void ifc(int i, int c, char* str, char** v, s21_grep t) {
               }
             }
           }
-          if (fnc > 1 && t.h == 1) {
+          if (fnc > 1 && t.h != 1) {
             printf("%s:%d\n", v[i], ct);
           } else {
             printf("%d\n", ct);
@@ -258,14 +254,14 @@ void ifce(int j, int c, char* str, char** v, s21_grep t) {
     int maxstr = 0;
 
     while (1) {
-      if (strstr(v[i], "-e") != NULL) {
+      if (strstr(v[i], "-e") != NULL || strstr(v[i], "-f") != NULL) {
         if (strlen(v[i]) == 2) {
           if (c - i < 3)
-            break;
+            return;
           else
             i += 2;
         } else {
-          break;
+          return;
         }
       } else {
         break;
@@ -277,7 +273,7 @@ void ifce(int j, int c, char* str, char** v, s21_grep t) {
         maxstr = max(v[i]) + 2;
         char* s = (char*)malloc(sizeof(char) * maxstr);
         while (fgets(s, maxstr, f)) {
-          FR(&status, c, cflags, s, v, &reg, chr);
+          FR(&status, c, cflags, s, v, &reg, chr, t);
           if (t.f == 1) {
             if (FlagF(s, str, t) == 1)
               status = 1;
@@ -344,11 +340,7 @@ void ife(int j, int c, char* str, char** v, s21_grep t) {
         char* s = (char*)malloc(sizeof(char) * maxstr);
         while (fgets(s, maxstr, f)) {
           ct++;
-          FR(&status, c, cflags, s, v, &reg, chr);
-          if (t.f == 1) {
-            if (FlagFe(c, cflags, s, v, &reg, chr) == 0)
-              status = 0;
-          }
+          FR(&status, c, cflags, s, v, &reg, chr, t);
           if (t.v != 1) {
             if (status == 0) {
               if (t.n == 1) {
@@ -482,32 +474,4 @@ int FlagF(char* s, char* str, s21_grep t) {
   free(pa);
   fclose(f);
   return 0;
-}
-
-int FlagFe(int c, int cflags, char* s, char** v,
-        regex_t* reg, regmatch_t* chr) {
-    FILE* f;
-    int status = 0;
-    int i;
-
-    char* str;
-    while(i < c) {
-        if (v[i][0] == '-' && strstr(v[i], "f")) {
-            str = v[i + 1];
-            break;
-        }
-        i++;
-    }
-
-    int mx = max(str) + 2;
-
-    char* pa = (char*)malloc(sizeof(char) * mx);
-    f = fopen(str, "r");
-    while (fgets(pa, mx, f)) {
-        regcomp(reg, pa, cflags);
-        status = regexec(reg, s, M, chr, 0);
-    }
-  free(pa);
-  fclose(f);
-  return status;
 }

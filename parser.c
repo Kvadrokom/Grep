@@ -46,18 +46,18 @@ void parser(int c, char** v, s21_grep* t) {
       }
     }
   }
-  tp(c, v, t);
+  tp(c, v, *t);
 }
 
-void tp(int c, char** v, s21_grep* t) {
+void tp(int c, char** v, s21_grep t) {
   int ct, ctstr;
   char* a;
-  if (t->e == 1) {
+  if (t.e == 1) {
     for (int j = 1; j < c; j++) {
       if (strstr(v[j], "-e") != NULL) {
         if (strlen(v[j]) == 2) {
           a = v[j + 1];
-          reader(c, j, v, a, *t);
+          reader(c, j, v, a, t);
           break;
         } else {
           for (int i = 1; i < c; i++) {
@@ -71,7 +71,7 @@ void tp(int c, char** v, s21_grep* t) {
                   ct++;
                 }
               }
-              reader(c, i, v, a, *t);
+              reader(c, i, v, a, t);
               free(a);
             }
           }
@@ -82,7 +82,7 @@ void tp(int c, char** v, s21_grep* t) {
     for (int i = 1; i < c; i++) {
       if (v[i][0] != '-') {
         a = v[i];
-        reader(c, i, v, a, *t);
+        reader(c, i, v, a, t);
         break;
       }
     }
