@@ -58,21 +58,29 @@ void FR(int* status, int c, int cflags, char* s, char** v,
 
 int fnct(int j, int c, char** v) {
   int ct = 0;
+  char* a;
   for (int i = 1; i < c; i++) {
     while (1) {
-      if (strstr(v[i], "-e") != NULL || strstr(v[i], "-f") != NULL) {
-        if (strlen(v[i]) == 2) {
-          if (c - i < 3)
-            return ct;
-          else
-            i += 2;
-        } else {
-          break;
-        }
+    if ((strstr(v[i], "-f") != NULL || strstr(v[i], "e") != NULL) && v[i][0] == '-') {
+      if (strstr(v[i], "e") != NULL) {
+        a = strstr(v[i], "e");
       } else {
-        break;
+        a = strstr(v[i], "f");
       }
-    }
+      if (strlen(a) > 1) {
+        if (c - i > 1)
+          i += 1;
+        else
+          return ct;
+      } else {
+        if (c - i > 2)
+          i += 2;
+        else
+          return ct;
+      }
+    } else
+      break;
+  }
     if (v[i][0] != '-' && strcmp(v[i], v[j]) != 0)
       ct++;
   }

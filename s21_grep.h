@@ -30,7 +30,7 @@ void ifl(int i, int c, char* str, char** v, s21_grep t);
 void ifle(int j, int c, char** v, s21_grep t);
 void ifv(int i, int c, char* str, char** v, s21_grep t);
 void ifc(int i, int c, char* str, char** v, s21_grep t);
-void ifce(int j, int c, char* str, char** v, s21_grep t);
+void ifce(int j, int c, char** v, s21_grep t);
 void ife(int j, int c, char* str, char** v, s21_grep t);
 void ifo(int fnc, int ct, char* s, char* str, char* v, s21_grep t);
 int FlagF(char* s, char* str, s21_grep t);

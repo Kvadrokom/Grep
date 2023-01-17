@@ -54,6 +54,7 @@ void ifl(int i, int c, char* str, char** v, s21_grep t) {
 
 void ifle(int j, int c, char** v, s21_grep t) {
   FILE* f;
+  char* a;
   int ct, status, maxstr, cflags;
   if (t.i == 1) {
     cflags = REG_ICASE;
@@ -63,19 +64,26 @@ void ifle(int j, int c, char** v, s21_grep t) {
 
   for (int i = 1; i < c; i++) {
     while (1) {
-      if (strstr(v[i], "-e") != NULL || strstr(v[i], "-f") != NULL) {
-        if (strlen(v[i]) == 2) {
-          if (c - i < 3)
-            return;
-          else
-            i += 2;
-        } else {
-          return;
-        }
+    if ((strstr(v[i], "-f") != NULL || strstr(v[i], "e") != NULL) && v[i][0] == '-') {
+      if (strstr(v[i], "e") != NULL) {
+        a = strstr(v[i], "e");
       } else {
-        break;
+        a = strstr(v[i], "f");
       }
-    }
+      if (strlen(a) > 1) {
+        if (c - i > 1)
+          i += 1;
+        else
+          return;
+      } else {
+        if (c - i > 2)
+          i += 2;
+        else
+          return;
+      }
+    } else
+      break;
+  }
     ct = 0;
     regex_t reg;
     regmatch_t chr[1];
@@ -189,7 +197,7 @@ void ifc(int i, int c, char* str, char** v, s21_grep t) {
   int fnc = fnct(i, c, v);
 
   if (t.e == 1) {
-    ifce(i, c, str, v, t);
+    ifce(i, c, v, t);
   } else {
     for (i = i + 1; i < c; i++) {
       int ct = 0;
@@ -237,7 +245,7 @@ void ifc(int i, int c, char* str, char** v, s21_grep t) {
   }
 }
 
-void ifce(int j, int c, char* str, char** v, s21_grep t) {
+void ifce(int j, int c, char** v, s21_grep t) {
   FILE* f;
   int fnc = fnct(j, c, v);
   int status, cflags;
@@ -252,21 +260,29 @@ void ifce(int j, int c, char* str, char** v, s21_grep t) {
     regmatch_t chr[1];
     int ct = 0;
     int maxstr = 0;
+    char* a;
 
-    while (1) {
-      if (strstr(v[i], "-e") != NULL || strstr(v[i], "-f") != NULL) {
-        if (strlen(v[i]) == 2) {
-          if (c - i < 3)
-            return;
-          else
-            i += 2;
-        } else {
-          return;
-        }
+  while (1) {
+    if ((strstr(v[i], "-f") != NULL || strstr(v[i], "e") != NULL) && v[i][0] == '-') {
+      if (strstr(v[i], "e") != NULL) {
+        a = strstr(v[i], "e");
       } else {
-        break;
+        a = strstr(v[i], "f");
       }
-    }
+      if (strlen(a) > 1) {
+        if (c - i > 1)
+          i += 1;
+        else
+          return;
+      } else {
+        if (c - i > 2)
+          i += 2;
+        else
+          return;
+      }
+    } else
+      break;
+  }
     if (v[i][0] != '-' && strcmp(v[i], v[j]) != 0) {
       f = fopen(v[i], "r");
       if (f != NULL) {
@@ -274,10 +290,6 @@ void ifce(int j, int c, char* str, char** v, s21_grep t) {
         char* s = (char*)malloc(sizeof(char) * maxstr);
         while (fgets(s, maxstr, f)) {
           FR(&status, c, cflags, s, v, &reg, chr, t);
-          if (t.f == 1) {
-            if (FlagF(s, str, t) == 1)
-              status = 1;
-          }
           if (t.v != 1) {
             if (status == 0) ct++;
           } else {
@@ -319,20 +331,28 @@ void ife(int j, int c, char* str, char** v, s21_grep t) {
     //         printf("\n");
     // }
     int maxstr = 0;
+    char* a;
     while (1) {
-      if (strstr(v[i], "-e") != NULL || strstr(v[i], "-f") != NULL) {
-        if (strlen(v[i]) == 2) {
-          if (c - i < 3)
-            return;
-          else
-            i += 2;
-        } else {
-          return;
-        }
+    if ((strstr(v[i], "-f") != NULL || strstr(v[i], "e") != NULL) && v[i][0] == '-') {
+      if (strstr(v[i], "e") != NULL) {
+        a = strstr(v[i], "e");
       } else {
-        break;
+        a = strstr(v[i], "f");
       }
-    }
+      if (strlen(a) > 1) {
+        if (c - i > 1)
+          i += 1;
+        else
+          return;
+      } else {
+        if (c - i > 2)
+          i += 2;
+        else
+          return;
+      }
+    } else
+      break;
+  }
     if (v[i][0] != '-' && strcmp(v[i], str) != 0) {
       f = fopen(v[i], "r");
       if (f != NULL) {
@@ -373,7 +393,7 @@ void ife(int j, int c, char* str, char** v, s21_grep t) {
                 if (feof(f) != 0) printf("\n");
               }
             }
-          } else {
+          } else if (t.o != 1) {
             if (status != 0) {
               if (t.n == 1) {
                 if (fc > 1 && t.h != 1)

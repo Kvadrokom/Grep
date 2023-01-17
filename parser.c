@@ -50,32 +50,20 @@ void parser(int c, char** v, s21_grep* t) {
 }
 
 void tp(int c, char** v, s21_grep t) {
-  int ct, ctstr;
   char* a;
   if (t.e == 1) {
-    for (int j = 1; j < c; j++) {
-      if (strstr(v[j], "-e") != NULL) {
-        if (strlen(v[j]) == 2) {
-          a = v[j + 1];
-          reader(c, j, v, a, t);
-          break;
+    for (int i = 1; i < c; i++) {
+      if ((a = strstr(v[i], "e")) != NULL && v[i][0] == '-') {
+        if (strlen(a) > 1) {
+          a = a + 1;
         } else {
-          for (int i = 1; i < c; i++) {
-            ct = 0;
-            if (strstr(v[i], "-e") != 0) {
-              ctstr = strlen(v[i]);
-              a = (char*)malloc(sizeof(char) * ctstr);
-              while (ct < ctstr) {
-                if (v[i][ct] != '\0') {
-                  a[ct] = v[i][ct + 2];
-                  ct++;
-                }
-              }
-              reader(c, i, v, a, t);
-              free(a);
-            }
-          }
+          if (c - i >= 1)
+            a = v[i + 1];
+          else
+            break;
         }
+        reader(c, i, v, a, t);
+        break;
       }
     }
   } else {
